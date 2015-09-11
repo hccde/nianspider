@@ -1,14 +1,15 @@
 var https = require('https');
 var http = require('http');
 var cheerio = require('cheerio');
+// var savefile = require('./savefile')
 var request = require('request');
+ var fs = require('fs');
 var content;
 var id = 1;
 var url = 'http://www.nian.so/thing.php?id=1';
 var _ = require('underscore');
 var page = 0;
-
-
+ws = fs.createWriteStream('nian.txt');
 
 if (url.split(':')[0] === 'https') {
 	function httpsUrl() {
@@ -22,6 +23,7 @@ if (url.split(':')[0] === 'https') {
 	httpsUrl();
 } else {
 	function httpUrl() {
+
 		content = '';
 		http.get(url, function(res) {
 			res.on('data', function(data) {
@@ -60,7 +62,9 @@ function anysis(content) {
 				};
 
 			};
-			console.log(outer.text());
+			var inteset = outer.text()
+			console.log(inteset);
+			ws.write(inteset);
 		}
 	};
 if($('div.step_more').text()){
