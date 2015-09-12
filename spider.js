@@ -1,5 +1,6 @@
 var https = require('https');
 var http = require('http');
+var savefile = require('./savefile');
 var cheerio = require('cheerio');
 var request = require('request');
 var content;
@@ -14,8 +15,10 @@ if (url.split(':')[0] === 'https') {
 	function httpsUrl() {
 		https.get(url, function(res) {
 			res.on('data', function(data) {
-				content = data.toString();
-				anysis(content)
+				content += data;
+			});
+			res.on('end', function() {
+				anysis(content);
 			})
 		});
 	}
@@ -25,16 +28,12 @@ if (url.split(':')[0] === 'https') {
 		content = '';
 		http.get(url, function(res) {
 			res.on('data', function(data) {
-				content+=data;
+				content += data;
 			});
-			res.on('end',function(){
+			res.on('end', function() {
 				anysis(content);
-				//console.log('done');
 			})
 		});
-		// return -1;
-
-	// return;
 	}
 	httpUrl();
 
@@ -42,13 +41,11 @@ if (url.split(':')[0] === 'https') {
 
 function anysis(content) {
 	$ = cheerio.load(content);
-	if ($('div.title').text() === '' && id >99999) {
+	if ($('div.title').text() === '' && id > 99999) {
 		console.log(' spider work finished');
 		return;
 	} else {
 		var outer = $('div.step');
-		// console.log($('div.title').text());
-		
 		if (outer.length) {
 			for (var j in outer) {
 				if (outer[j].children) {
@@ -60,25 +57,24 @@ function anysis(content) {
 				};
 
 			};
-			console.log(outer.text());
+			var text = outer.text();
+			savefile.write(text,'/home/admos/nian.text');
 		}
 	};
-if($('div.step_more').text()){
-	page=page+1;
-	console.log(page);
-	loadmore(id,page);
-	console.log('loadmore')
-}
-else{
-	console.log('none')
-	page = 0;
-				id+=1;
+	if ($('div.step_more').text()) {
+		page = page + 1;
+		console.log(page);
+		loadmore(id, page);
+	} else {
+		console.log('none')
+		page = 0;
+		id += 1;
 
 
-	url='http://www.nian.so/thing.php?id='+id;
-	console.log(url);
-	httpUrl();
-}
+		url = 'http://www.nian.so/thing.php?id=' + id;
+		console.log(url);
+		httpUrl();
+	}
 
 }
 
@@ -91,9 +87,8 @@ function loadmore(id, page) {
 			"page": page,
 			"t": Math.random()
 		}
-	}, function(err,res,body) {
+	}, function(err, res, body) {
 		anysis(body);
-		})
-	
-}
+	})
 
+}
