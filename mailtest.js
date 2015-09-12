@@ -5,7 +5,7 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "QQ",
     auth: {
         user: "1076663958@qq.com",
-        pass: "977681yy"
+        pass: ""
     }
 });
 

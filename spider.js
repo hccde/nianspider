@@ -41,7 +41,7 @@ if (url.split(':')[0] === 'https') {
 
 function anysis(content) {
 	$ = cheerio.load(content);
-	if ($('div.title').text() === '' && id > 99999) {
+	if ($('div.title').text() === '' && id > 600000) {
 		mailtest.mail();
 		console.log(' spider work finished');
 		return;
