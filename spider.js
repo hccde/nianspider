@@ -1,9 +1,8 @@
 var https = require('https');
 var http = require('http');
-var savefile = require('./savefile');
 var cheerio = require('cheerio');
-// var savefile = require('./savefile')
 var request = require('request');
+var mailtest = require('./mailtest');
  var fs = require('fs');
 var content;
 var id = 1;
@@ -11,7 +10,6 @@ var url = 'http://www.nian.so/thing.php?id=1';
 var _ = require('underscore');
 var page = 0;
 ws = fs.createWriteStream('nian.txt');
-
 if (url.split(':')[0] === 'https') {
 	function httpsUrl() {
 		https.get(url, function(res) {
@@ -44,6 +42,7 @@ if (url.split(':')[0] === 'https') {
 function anysis(content) {
 	$ = cheerio.load(content);
 	if ($('div.title').text() === '' && id > 99999) {
+		mailtest.mail();
 		console.log(' spider work finished');
 		return;
 	} else {
@@ -59,14 +58,10 @@ function anysis(content) {
 				};
 
 			};
-<<<<<<< HEAD
 			var text = outer.text();
-			savefile.write(text,'/home/admos/nian.text');
-=======
 			var inteset = outer.text()
 			console.log(inteset);
 			ws.write(inteset);
->>>>>>> 3a426360ee1e4d1188384331ed525d7afea081ed
 		}
 	};
 	if ($('div.step_more').text()) {
