@@ -52,7 +52,25 @@ function anysis(content) {
 				if (outer[j].children) {
 					_.forEach(outer[j].children, function(e) {
 						if (e && e.name == 'a' && e.attribs && e.attribs.class == 'img') {
-							console.log(e.attribs.href);
+							var filename = e.attribs.href.split('/').pop();
+							//下载图片
+							var options = {
+  								url: 'http://img.nian.so/step/'+filename,
+  								headers: {
+    								'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+									'Accept-Encoding':'gzip, deflate, sdch',
+									'Accept-Language':'zh-CN,zh;q=0.8',
+									'Connection':'keep-alive',
+									'Cookie':'__utma=6360749.383970808.1471687231.1474983462.1475079018.15; __utmb=6360749.7.10.1475079018; __utmc=6360749; __utmz=6360749.1475079018.15.15.utmcsr=baidu|utmccn=(organic)|utmcmd=organic',
+									'Host':'img.nian.so',
+									'Upgrade-Insecure-Requests':1,
+									'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2824.2 Safari/537.36'
+  								}
+							};
+							request(options).on('error', function(err) {
+    								console.log(err)
+  							}).pipe(fs.createWriteStream('./img'filename+'.png'));
+
 						};
 					})
 				};
