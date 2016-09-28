@@ -19,6 +19,9 @@ if (url.split(':')[0] === 'https') {
 			res.on('end', function() {
 				anysis(content);
 			})
+			res.on('error', function() {
+				anysis(content);
+			})
 		});
 	}
 	httpsUrl();
@@ -31,6 +34,9 @@ if (url.split(':')[0] === 'https') {
 				content += data;
 			});
 			res.on('end', function() {
+				anysis(content);
+			})
+			res.on('error', function() {
 				anysis(content);
 			})
 		});
@@ -69,7 +75,7 @@ function anysis(content) {
 							};
 							request(options).on('error', function(err) {
     								console.log(err)
-  							}).pipe(fs.createWriteStream('./img'filename+'.png'));
+  							}).pipe(fs.createWriteStream('./img'+filename+'.png'));
 
 						};
 					})
@@ -102,6 +108,7 @@ function anysis(content) {
 
 function loadmore(id, page) {
 	// console.log('page;'+page);
+	setTimeout(function(){
 	request.post('http://www.nian.so/more_step.php', {
 		form: {
 			"id": id,
@@ -110,6 +117,6 @@ function loadmore(id, page) {
 		}
 	}, function(err, res, body) {
 		anysis(body);
-	})
+	})}, Math.random()*10*200);
 
 }
